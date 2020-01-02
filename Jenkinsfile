@@ -28,6 +28,15 @@ pipeline {
            sh 'echo No docker image for Mongodb'
          }
       }
+      
+      stage("Docker Push") {
+         steps {
+           withCredentials([string(credentialsId: 'DockerHub_credentials', variable: 'DockerHub_credentials')]) {
+             sh "docker login -u hashimabd -p ${DockerHub_credentials}"
+              sh "docker push ${REPOSITORY_TAG}"
+           }
+         }   
+      }
 
       stage('Deploy to Cluster') {
           steps {
